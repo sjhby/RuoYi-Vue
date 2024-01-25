@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cmfg.mapper.ServicesMapper">
+    
+    <resultMap type="Services" id="ServicesResult">
+        <result property="serId"    column="serId"    />
+        <result property="type"    column="type"    />
+        <result property="delta"    column="delta"    />
+        <result property="maxQlen"    column="maxQlen"    />
+    </resultMap>
+
+    <sql id="selectServicesVo">
+        select serId, type, delta, maxQlen from services
+    </sql>
+
+    <select id="selectServicesList" parameterType="Services" resultMap="ServicesResult">
+        <include refid="selectServicesVo"/>
+        <where>  
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="delta != null "> and delta = #{delta}</if>
+            <if test="maxQlen != null "> and maxQlen = #{maxQlen}</if>
+        </where>
+    </select>
+    
+    <select id="selectServicesBySerId" parameterType="Long" resultMap="ServicesResult">
+        <include refid="selectServicesVo"/>
+        where serId = #{serId}
+    </select>
+        
+    <insert id="insertServices" parameterType="Services">
+        insert into services
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serId != null">serId,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="delta != null">delta,</if>
+            <if test="maxQlen != null">maxQlen,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serId != null">#{serId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="delta != null">#{delta},</if>
+            <if test="maxQlen != null">#{maxQlen},</if>
+         </trim>
+    </insert>
+
+    <update id="updateServices" parameterType="Services">
+        update services
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="delta != null">delta = #{delta},</if>
+            <if test="maxQlen != null">maxQlen = #{maxQlen},</if>
+        </trim>
+        where serId = #{serId}
+    </update>
+
+    <delete id="deleteServicesBySerId" parameterType="Long">
+        delete from services where serId = #{serId}
+    </delete>
+
+    <delete id="deleteServicesBySerIds" parameterType="String">
+        delete from services where serId in 
+        <foreach item="serId" collection="array" open="(" separator="," close=")">
+            #{serId}
+        </foreach>
+    </delete>
+</mapper>

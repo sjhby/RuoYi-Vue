@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cmfg.mapper.ResourceMapper">
+    
+    <resultMap type="Resource" id="ResourceResult">
+        <result property="resId"    column="resId"    />
+        <result property="serType"    column="serType"    />
+        <result property="maxVol"    column="maxVol"    />
+        <result property="cost"    column="cost"    />
+        <result property="quality"    column="quality"    />
+        <result property="userId"    column="userId"    />
+        <result property="serId"    column="serId"    />
+    </resultMap>
+
+    <sql id="selectResourceVo">
+        select resId, serType, maxVol, cost, quality, userId, serId from resource
+    </sql>
+
+    <select id="selectResourceList" parameterType="Resource" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        <where>  
+            <if test="serType != null  and serType != ''"> and serType = #{serType}</if>
+            <if test="maxVol != null "> and maxVol = #{maxVol}</if>
+            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="quality != null "> and quality = #{quality}</if>
+            <if test="userId != null "> and userId = #{userId}</if>
+            <if test="serId != null "> and serId = #{serId}</if>
+        </where>
+    </select>
+    
+    <select id="selectResourceByResId" parameterType="Long" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        where resId = #{resId}
+    </select>
+        
+    <insert id="insertResource" parameterType="Resource">
+        insert into resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="resId != null">resId,</if>
+            <if test="serType != null and serType != ''">serType,</if>
+            <if test="maxVol != null">maxVol,</if>
+            <if test="cost != null">cost,</if>
+            <if test="quality != null">quality,</if>
+            <if test="userId != null">userId,</if>
+            <if test="serId != null">serId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="resId != null">#{resId},</if>
+            <if test="serType != null and serType != ''">#{serType},</if>
+            <if test="maxVol != null">#{maxVol},</if>
+            <if test="cost != null">#{cost},</if>
+            <if test="quality != null">#{quality},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="serId != null">#{serId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateResource" parameterType="Resource">
+        update resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serType != null and serType != ''">serType = #{serType},</if>
+            <if test="maxVol != null">maxVol = #{maxVol},</if>
+            <if test="cost != null">cost = #{cost},</if>
+            <if test="quality != null">quality = #{quality},</if>
+            <if test="userId != null">userId = #{userId},</if>
+            <if test="serId != null">serId = #{serId},</if>
+        </trim>
+        where resId = #{resId}
+    </update>
+
+    <delete id="deleteResourceByResId" parameterType="Long">
+        delete from resource where resId = #{resId}
+    </delete>
+
+    <delete id="deleteResourceByResIds" parameterType="String">
+        delete from resource where resId in 
+        <foreach item="resId" collection="array" open="(" separator="," close=")">
+            #{resId}
+        </foreach>
+    </delete>
+</mapper>

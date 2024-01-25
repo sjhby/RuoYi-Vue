@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.cmfg.mapper.TaskMapper">
+    
+    <resultMap type="Task" id="TaskResult">
+        <result property="taskId"    column="taskId"    />
+        <result property="serType"    column="serType"    />
+        <result property="proceTime"    column="proceTime"    />
+        <result property="proceVol"    column="proceVol"    />
+        <result property="succs"    column="succs"    />
+        <result property="projId"    column="projId"    />
+    </resultMap>
+
+    <sql id="selectTaskVo">
+        select taskId, serType, proceTime, proceVol, succs, projId from task
+    </sql>
+
+    <select id="selectTaskList" parameterType="Task" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        <where>  
+            <if test="serType != null  and serType != ''"> and serType = #{serType}</if>
+            <if test="proceTime != null "> and proceTime = #{proceTime}</if>
+            <if test="proceVol != null "> and proceVol = #{proceVol}</if>
+            <if test="succs != null  and succs != ''"> and succs = #{succs}</if>
+            <if test="projId != null "> and projId = #{projId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskByTaskId" parameterType="Long" resultMap="TaskResult">
+        <include refid="selectTaskVo"/>
+        where taskId = #{taskId}
+    </select>
+        
+    <insert id="insertTask" parameterType="Task">
+        insert into task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">taskId,</if>
+            <if test="serType != null and serType != ''">serType,</if>
+            <if test="proceTime != null">proceTime,</if>
+            <if test="proceVol != null">proceVol,</if>
+            <if test="succs != null and succs != ''">succs,</if>
+            <if test="projId != null">projId,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="serType != null and serType != ''">#{serType},</if>
+            <if test="proceTime != null">#{proceTime},</if>
+            <if test="proceVol != null">#{proceVol},</if>
+            <if test="succs != null and succs != ''">#{succs},</if>
+            <if test="projId != null">#{projId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTask" parameterType="Task">
+        update task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serType != null and serType != ''">serType = #{serType},</if>
+            <if test="proceTime != null">proceTime = #{proceTime},</if>
+            <if test="proceVol != null">proceVol = #{proceVol},</if>
+            <if test="succs != null and succs != ''">succs = #{succs},</if>
+            <if test="projId != null">projId = #{projId},</if>
+        </trim>
+        where taskId = #{taskId}
+    </update>
+
+    <delete id="deleteTaskByTaskId" parameterType="Long">
+        delete from task where taskId = #{taskId}
+    </delete>
+
+    <delete id="deleteTaskByTaskIds" parameterType="String">
+        delete from task where taskId in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>
