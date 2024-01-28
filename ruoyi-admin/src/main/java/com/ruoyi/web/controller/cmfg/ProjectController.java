@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.controller;
+package com.ruoyi.web.controller.cmfg;
 
 import com.ruoyi.cmfg.domain.Project;
 import com.ruoyi.cmfg.service.IProjectService;
@@ -27,6 +27,10 @@ public class ProjectController extends BaseController
 {
     @Autowired
     private IProjectService projectService;
+    @GetMapping("/test")
+    public String Test(){
+        return "hello world";
+    }
 
     /**
      * 查询项目管理列表
@@ -39,6 +43,7 @@ public class ProjectController extends BaseController
         List<Project> list = projectService.selectProjectList(project);
         return getDataTable(list);
     }
+
 
     /**
      * 导出项目管理列表

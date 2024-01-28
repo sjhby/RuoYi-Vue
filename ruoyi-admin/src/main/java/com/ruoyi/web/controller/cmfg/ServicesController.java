@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.controller;
+package com.ruoyi.web.controller.cmfg;
 
 import com.ruoyi.cmfg.domain.Services;
 import com.ruoyi.cmfg.service.IServicesService;

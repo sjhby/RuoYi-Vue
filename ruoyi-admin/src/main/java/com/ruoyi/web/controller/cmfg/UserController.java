@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.controller;
+package com.ruoyi.web.controller.cmfg;
 
 import com.ruoyi.cmfg.domain.User;
 import com.ruoyi.cmfg.service.IUserService;
@@ -6,9 +6,11 @@ import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.framework.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,9 @@ public class UserController extends BaseController
 {
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private TokenService tokenService;
 
 
     /**
@@ -99,5 +104,12 @@ public class UserController extends BaseController
     public AjaxResult remove(@PathVariable Long[] userIds)
     {
         return toAjax(userService.deleteUserByUserIds(userIds));
+    }
+    @PostMapping("/login")
+    public boolean login(@RequestBody LoginUser user){
+
+        tokenService.createToken(user);
+
+        return true;
     }
 }
