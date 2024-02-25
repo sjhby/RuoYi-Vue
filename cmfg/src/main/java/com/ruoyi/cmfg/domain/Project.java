@@ -1,5 +1,7 @@
 package com.ruoyi.cmfg.domain;
 
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -9,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 项目管理对象 project
  * 
  * @author ruoyi
- * @date 2024-01-24
+ * @date 2024-02-18
  */
 public class Project extends BaseEntity
 {
@@ -19,8 +21,9 @@ public class Project extends BaseEntity
     private Long projId;
 
     /** 工期 */
-    @Excel(name = "工期")
-    private Long rlsTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "工期", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date rlsTime;
 
     /** 数量 */
     @Excel(name = "数量")
@@ -29,6 +32,10 @@ public class Project extends BaseEntity
     /** 需求方ID */
     @Excel(name = "需求方ID")
     private Long userId;
+
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private Integer finish;
 
     public void setProjId(Long projId) 
     {
@@ -39,12 +46,12 @@ public class Project extends BaseEntity
     {
         return projId;
     }
-    public void setRlsTime(Long rlsTime) 
+    public void setRlsTime(Date rlsTime) 
     {
         this.rlsTime = rlsTime;
     }
 
-    public Long getRlsTime() 
+    public Date getRlsTime() 
     {
         return rlsTime;
     }
@@ -66,6 +73,15 @@ public class Project extends BaseEntity
     {
         return userId;
     }
+    public void setFinish(Integer finish) 
+    {
+        this.finish = finish;
+    }
+
+    public Integer getFinish() 
+    {
+        return finish;
+    }
 
     @Override
     public String toString() {
@@ -74,6 +90,7 @@ public class Project extends BaseEntity
             .append("rlsTime", getRlsTime())
             .append("numT", getNumT())
             .append("userId", getUserId())
+            .append("finish", getFinish())
             .toString();
     }
 }

@@ -112,7 +112,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -133,7 +133,7 @@
         <el-form-item label="是否完成" prop="succs">
           <el-input v-model="form.succs" placeholder="请输入是否完成" />
         </el-form-item>
-        <el-form-item label="项目ID" prop="projId">
+        <el-form-item v-hasRole="['admin']" label="项目ID" prop="projId">
           <el-input v-model="form.projId" placeholder="请输入项目ID" />
         </el-form-item>
       </el-form>

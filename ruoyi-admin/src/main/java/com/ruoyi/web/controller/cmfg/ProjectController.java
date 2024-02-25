@@ -1,25 +1,31 @@
 package com.ruoyi.web.controller.cmfg;
 
-import com.ruoyi.cmfg.domain.Project;
-import com.ruoyi.cmfg.service.IProjectService;
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.cmfg.domain.Project;
+import com.ruoyi.cmfg.service.IProjectService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 项目管理Controller
  * 
  * @author ruoyi
- * @date 2024-01-24
+ * @date 2024-02-18
  */
 @RestController
 @RequestMapping("/cmfg/project_manage")
@@ -27,10 +33,6 @@ public class ProjectController extends BaseController
 {
     @Autowired
     private IProjectService projectService;
-    @GetMapping("/test")
-    public String Test(){
-        return "hello world";
-    }
 
     /**
      * 查询项目管理列表
@@ -43,7 +45,6 @@ public class ProjectController extends BaseController
         List<Project> list = projectService.selectProjectList(project);
         return getDataTable(list);
     }
-
 
     /**
      * 导出项目管理列表
@@ -75,8 +76,11 @@ public class ProjectController extends BaseController
     @Log(title = "项目管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Project project)
+    
     {
-        return toAjax(projectService.insertProject(project));
+        int rows = projectService.insertProject(project);
+        return rows > 0 ? AjaxResult.success(project) : AjaxResult.error();
+        //return toAjax(projectService.insertProject(project));
     }
 
     /**

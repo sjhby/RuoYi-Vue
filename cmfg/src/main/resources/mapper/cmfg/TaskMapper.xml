@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where taskId = #{taskId}
     </select>
         
-    <insert id="insertTask" parameterType="Task">
+    <insert id="insertTask" parameterType="Task" useGeneratedKeys="true" keyProperty="taskId">
         insert into task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="taskId != null">taskId,</if>
