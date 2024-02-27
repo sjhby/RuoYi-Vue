@@ -28,6 +28,15 @@ public interface IResourceService
     public List<Resource> selectResourceList(Resource resource);
 
     /**
+     * !!!!标记
+     * 查询资源列表
+     *
+     * @param resource 资源
+     * @return 资源集合
+     */
+    public List<Resource> selectResourceListByUserId(Long userId);
+
+    /**
      * 新增资源
      * 
      * @param resource 资源

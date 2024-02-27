@@ -1,31 +1,47 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="最大数量" prop="maxVol">
+      <el-form-item label="所需服务类型" prop="serType">
         <el-input
-          v-model="queryParams.maxVol"
+          v-model="queryParams.serType"
           placeholder="请输入最大数量"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="成本" prop="cost">
+      <el-form-item label="制造资源名称" prop="resName">
         <el-input
-          v-model="queryParams.cost"
-          placeholder="请输入成本"
+          v-model="queryParams.resName"
+          placeholder="请输入制造资源名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="质量" prop="quality">
+      <el-form-item label="服务质量" prop="quality">
         <el-input
           v-model="queryParams.quality"
-          placeholder="请输入质量"
+          placeholder="请输入服务质量"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="提供商ID" prop="userId">
+      <el-form-item label="服务单价" prop="cost">
+        <el-input
+          v-model="queryParams.cost"
+          placeholder="请输入服务单价"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="可用容量上限" prop="maxVol">
+        <el-input
+          v-model="queryParams.maxVol"
+          placeholder="请输入可用容量上限"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="提供商ID" prop="userId" v-hasRole="['admin']">
         <el-input
           v-model="queryParams.userId"
           placeholder="请输入提供商ID"
@@ -37,6 +53,14 @@
         <el-input
           v-model="queryParams.serId"
           placeholder="请输入所属服务ID"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="制造资源选配方式" prop="selType">
+        <el-input
+          v-model="queryParams.selType"
+          placeholder="请输入制造资源选配方式"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -97,11 +121,14 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="资源ID" align="center" prop="resId" />
       <el-table-column label="所需服务类型" align="center" prop="serType" />
-      <el-table-column label="最大数量" align="center" prop="maxVol" />
-      <el-table-column label="成本" align="center" prop="cost" />
-      <el-table-column label="质量" align="center" prop="quality" />
-      <el-table-column label="提供商ID" align="center" prop="userId" />
+      <el-table-column label="制造资源名称" align="center" prop="resName" />
+      <el-table-column label="服务质量" align="center" prop="quality" />
+      <el-table-column label="服务单价" align="center" prop="cost" />
+      <el-table-column label="可用容量上限" align="center" prop="maxVol" />
+      <el-table-column v-hasRole="['admin']" label="提供商ID" align="center" prop="userId" />
       <el-table-column label="所属服务ID" align="center" prop="serId" />
+      <el-table-column label="注册时间" align="center" prop="dateTime" />
+      <el-table-column label="制造资源选配方式" align="center" prop="selType" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -121,7 +148,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -133,20 +160,36 @@
     <!-- 添加或修改资源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="最大数量" prop="maxVol">
-          <el-input v-model="form.maxVol" placeholder="请输入最大数量" />
+        <el-form-item label="所需服务类型" prop="serType">
+          <el-input v-model="form.serType" placeholder="请输入所需服务类型" />
         </el-form-item>
-        <el-form-item label="成本" prop="cost">
-          <el-input v-model="form.cost" placeholder="请输入成本" />
+        <el-form-item label="制造资源名称" prop="resName">
+          <el-input v-model="form.resName" placeholder="请输入制造资源名称" />
         </el-form-item>
-        <el-form-item label="质量" prop="quality">
-          <el-input v-model="form.quality" placeholder="请输入质量" />
+        <el-form-item label="服务质量" prop="quality">
+          <el-input v-model="form.quality" placeholder="请输入服务质量" />
         </el-form-item>
-        <el-form-item label="提供商ID" prop="userId">
+        <el-form-item label="服务单价" prop="cost">
+          <el-input v-model="form.cost" placeholder="请输入服务单价" />
+        </el-form-item>
+        <el-form-item label="可用容量上限" prop="maxVol">
+          <el-input v-model="form.maxVol" placeholder="请输入可用容量上限" />
+        </el-form-item>
+        <el-form-item label="提供商ID" prop="userId" v-hasRole="['admin']">
           <el-input v-model="form.userId" placeholder="请输入提供商ID" />
         </el-form-item>
         <el-form-item label="所属服务ID" prop="serId">
           <el-input v-model="form.serId" placeholder="请输入所属服务ID" />
+        </el-form-item>
+        <el-form-item label="注册时间" prop="dateTime">
+          <el-date-picker v-model="form.dateTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+                          :style="{width: '100%'}" placeholder="请选择日期选择" clearable></el-date-picker>
+        </el-form-item>
+        <el-form-item label="制造资源选配方式" prop="selType">
+          <el-radio-group v-model="form.selType" size="medium">
+            <el-radio v-for="(item, index) in field103Options" :key="index" :label="item.value"
+                      :disabled="item.disabled">{{item.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -159,11 +202,16 @@
 
 <script>
 import { listRes_manage, getRes_manage, delRes_manage, addRes_manage, updateRes_manage } from "@/api/cmfg/res_manage";
+import {getUserProfile} from "@/api/system/user";
 
 export default {
   name: "Res_manage",
+  components: {},
+  props: [],
+
   data() {
     return {
+      user: {},
       // 遮罩层
       loading: true,
       // 选中数组
@@ -187,38 +235,74 @@ export default {
         pageNum: 1,
         pageSize: 10,
         serType: null,
-        maxVol: null,
-        cost: null,
+        resName: null,
         quality: null,
+        cost: null,
+        maxVol: null,
         userId: null,
-        serId: null
+        serId: null,
+        dateTime: null,
+        selType: null
       },
       // 表单参数
-      form: {},
+      form: {
+        selType: 1,
+        dateTime: null,
+      },
       // 表单校验
       rules: {
         serType: [
           { required: true, message: "所需服务类型不能为空", trigger: "change" }
         ],
-        maxVol: [
-          { required: true, message: "最大数量不能为空", trigger: "blur" }
-        ],
-        cost: [
-          { required: true, message: "成本不能为空", trigger: "blur" }
+        resName: [
+          { required: true, message: "制造资源名称不能为空", trigger: "change" }
         ],
         quality: [
-          { required: true, message: "质量不能为空", trigger: "blur" }
+          { required: true, message: "服务质量不能为空", trigger: "blur" }
+        ],
+        cost: [
+          { required: true, message: "服务单价不能为空", trigger: "blur" }
+        ],
+        maxVol: [
+          { required: true, message: "可用容量上限不能为空", trigger: "blur" }
         ],
         userId: [
           { required: true, message: "提供商ID不能为空", trigger: "blur" }
         ],
-      }
+        serId: [
+          { required: true, message: "所属服务ID不能为空", trigger: "blur" }
+        ],
+        dateTime: [{
+          required: true,
+          message: '请选择日期选择',
+          trigger: 'change'
+        }],
+        selType: [{
+          required: true,
+          message: '单选框组不能为空',
+          trigger: 'change'
+        }],
+      },
+      field103Options: [{
+        "label": "平台智能协调（推荐）",
+        "value": "平台智能协调（推荐）"
+      }, {
+        "label": "用户协商",
+        "value": "用户协商"
+      }],
     };
   },
   created() {
-    this.getList();
+    this.getUser();
   },
   methods: {
+    getUser() {
+      getUserProfile().then(response => {
+        this.user = response.data;
+        this.queryParams.userId=this.user.userId;
+        this.getList();
+      });
+    },
     /** 查询资源列表 */
     getList() {
       this.loading = true;
@@ -238,11 +322,14 @@ export default {
       this.form = {
         resId: null,
         serType: null,
-        maxVol: null,
-        cost: null,
+        resName: null,
         quality: null,
+        cost: null,
+        maxVol: null,
         userId: null,
-        serId: null
+        serId: null,
+        dateTime: null,
+        selType: null
       };
       this.resetForm("form");
     },
@@ -314,6 +401,9 @@ export default {
         ...this.queryParams
       }, `res_manage_${new Date().getTime()}.xlsx`)
     }
-  }
+  },
+  computed: {},
+  watch: {},
+  mounted() {},
 };
 </script>

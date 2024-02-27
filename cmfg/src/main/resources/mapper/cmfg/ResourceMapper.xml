@@ -7,26 +7,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Resource" id="ResourceResult">
         <result property="resId"    column="resId"    />
         <result property="serType"    column="serType"    />
-        <result property="maxVol"    column="maxVol"    />
-        <result property="cost"    column="cost"    />
+        <result property="resName"    column="resName"    />
         <result property="quality"    column="quality"    />
+        <result property="cost"    column="cost"    />
+        <result property="maxVol"    column="maxVol"    />
         <result property="userId"    column="userId"    />
         <result property="serId"    column="serId"    />
+        <result property="dateTime"    column="dateTime"    />
+        <result property="selType"    column="selType"    />
     </resultMap>
 
     <sql id="selectResourceVo">
-        select resId, serType, maxVol, cost, quality, userId, serId from resource
+        select resId, serType, resName, quality, cost, maxVol, userId, serId, dateTime, selType from resource
     </sql>
 
     <select id="selectResourceList" parameterType="Resource" resultMap="ResourceResult">
         <include refid="selectResourceVo"/>
         <where>  
             <if test="serType != null  and serType != ''"> and serType = #{serType}</if>
-            <if test="maxVol != null "> and maxVol = #{maxVol}</if>
-            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="resName != null  and resName != ''"> and resName = #{resName}</if>
             <if test="quality != null "> and quality = #{quality}</if>
+            <if test="cost != null "> and cost = #{cost}</if>
+            <if test="maxVol != null "> and maxVol = #{maxVol}</if>
             <if test="userId != null "> and userId = #{userId}</if>
             <if test="serId != null "> and serId = #{serId}</if>
+            <if test="dateTime != null "> and dateTime = #{dateTime}</if>
+            <if test="selType != null and selType != ''"> and selType = #{selType}</if>
         </where>
     </select>
     
@@ -34,26 +40,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectResourceVo"/>
         where resId = #{resId}
     </select>
+
+    <select id="selectResourceByUserId" parameterType="Resource" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        where userId = #{userId}
+    </select>
         
     <insert id="insertResource" parameterType="Resource">
         insert into resource
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="resId != null">resId,</if>
             <if test="serType != null and serType != ''">serType,</if>
-            <if test="maxVol != null">maxVol,</if>
-            <if test="cost != null">cost,</if>
+            <if test="resName != null  and resName != ''">resName,</if>
             <if test="quality != null">quality,</if>
+            <if test="cost != null">cost,</if>
+            <if test="maxVol != null">maxVol,</if>
             <if test="userId != null">userId,</if>
             <if test="serId != null">serId,</if>
+            <if test="dateTime != null">dateTime,</if>
+            <if test="selType != null and selType != ''">selType,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="resId != null">#{resId},</if>
             <if test="serType != null and serType != ''">#{serType},</if>
-            <if test="maxVol != null">#{maxVol},</if>
-            <if test="cost != null">#{cost},</if>
+            <if test="resName != null  and resName != ''">#{resName},</if>
             <if test="quality != null">#{quality},</if>
+            <if test="cost != null">#{cost},</if>
+            <if test="maxVol != null">#{maxVol},</if>
             <if test="userId != null">#{userId},</if>
             <if test="serId != null">#{serId},</if>
+            <if test="dateTime != null">#{dateTime},</if>
+            <if test="selType != null and selType != ''">#{selType},</if>
          </trim>
     </insert>
 
@@ -61,11 +78,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update resource
         <trim prefix="SET" suffixOverrides=",">
             <if test="serType != null and serType != ''">serType = #{serType},</if>
-            <if test="maxVol != null">maxVol = #{maxVol},</if>
-            <if test="cost != null">cost = #{cost},</if>
+            <if test="resName != null  and resName != ''">resName = #{resName},</if>
             <if test="quality != null">quality = #{quality},</if>
+            <if test="cost != null">cost = #{cost},</if>
+            <if test="maxVol != null">maxVol = #{maxVol},</if>
             <if test="userId != null">userId = #{userId},</if>
             <if test="serId != null">serId = #{serId},</if>
+            <if test="dateTime != null">dateTime = #{dateTime},</if>
+            <if test="selType != null and selType != ''">selType = #{selType},</if>
         </trim>
         where resId = #{resId}
     </update>

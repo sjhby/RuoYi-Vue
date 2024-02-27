@@ -41,6 +41,19 @@ public class ResourceController extends BaseController
     }
 
     /**
+     * !!!！标记
+     * 根据提供商ID查询资源列表
+     */
+    @PreAuthorize("@ss.hasPermi('cmfg:res_manage:list')")
+    @GetMapping("/listByUserId")
+    public TableDataInfo listByUserId(Long userId)
+    {
+        startPage();
+        List<Resource> list = resourceService.selectResourceListByUserId(userId);
+        return getDataTable(list);
+    }
+
+    /**
      * 导出资源列表
      */
     @PreAuthorize("@ss.hasPermi('cmfg:res_manage:export')")
