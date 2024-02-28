@@ -44,6 +44,19 @@ public class ResourceServiceImpl implements IResourceService
     }
 
     /**
+     * !!!!标记
+     * 查询资源列表
+     *
+     * @param resource 资源
+     * @return 资源
+     */
+    @Override
+    public List<Resource> selectResourceListByUserId(Long userId)
+    {
+        return resourceMapper.selectResourceByUserId(userId);
+    }
+
+    /**
      * 新增资源
      * 
      * @param resource 资源
