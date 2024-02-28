@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 任务管理对象 task
  * 
  * @author ruoyi
- * @date 2024-01-24
+ * @date 2024-02-27
  */
 public class Task extends BaseEntity
 {

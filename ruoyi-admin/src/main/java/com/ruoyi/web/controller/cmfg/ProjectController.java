@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 项目管理Controller
  * 
  * @author ruoyi
- * @date 2024-02-18
+ * @date 2024-02-27
  */
 @RestController
 @RequestMapping("/cmfg/project_manage")
@@ -76,11 +76,8 @@ public class ProjectController extends BaseController
     @Log(title = "项目管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Project project)
-    
     {
-        int rows = projectService.insertProject(project);
-        return rows > 0 ? AjaxResult.success(project) : AjaxResult.error();
-        //return toAjax(projectService.insertProject(project));
+        return toAjax(projectService.insertProject(project));
     }
 
     /**
