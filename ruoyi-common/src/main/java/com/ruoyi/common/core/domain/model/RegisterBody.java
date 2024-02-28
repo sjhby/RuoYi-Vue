@@ -7,5 +7,12 @@ package com.ruoyi.common.core.domain.model;
  */
 public class RegisterBody extends LoginBody
 {
+    private Long[] roleIds;
+    public Long[] getRoleIds() {
+        return roleIds;
+    }
 
+    public void setRoleIds(Long[] roleIds) {
+        this.roleIds = roleIds;
+    }
 }

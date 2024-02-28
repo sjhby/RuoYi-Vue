@@ -274,7 +274,13 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public boolean registerUser(SysUser user)
     {
-        return userMapper.insertUser(user) > 0;
+        try {
+            userMapper.insertUser(user);
+            this.insertUserRole(user);
+            return true;
+        }catch (Exception e){
+            return  false;
+        }
     }
 
     /**

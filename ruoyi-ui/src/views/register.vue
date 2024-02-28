@@ -29,6 +29,16 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
+      <el-form-item prop="roleIds">
+        <el-select v-model="registerForm.roleIds" placeholder="请选择用户类型">
+          <el-option
+            v-for="dict in dict.type.user_roles"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item prop="code" v-if="captchaEnabled">
         <el-input
           v-model="registerForm.code"
@@ -68,9 +78,11 @@
 
 <script>
 import { getCodeImg, register } from "@/api/login";
+import { logger } from "runjs/lib/common";
 
 export default {
   name: "Register",
+  dicts: ['user_roles'],
   data() {
     const equalToPassword = (rule, value, callback) => {
       if (this.registerForm.password !== value) {
@@ -86,7 +98,8 @@ export default {
         password: "",
         confirmPassword: "",
         code: "",
-        uuid: ""
+        uuid: "",
+        roleIds:[null],
       },
       registerRules: {
         username: [
@@ -124,6 +137,10 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           this.loading = true;
+          logger.log(Number.parseFloat(this.registerForm.roleIds[0]));
+          var temp = Number.parseFloat(this.registerForm.roleIds[0]);
+          this.registerForm.roleIds=[temp];
+
           register(this.registerForm).then(res => {
             const username = this.registerForm.username;
             this.$alert("<font color='red'>恭喜你，您的账号 " + username + " 注册成功！</font>", '系统提示', {
