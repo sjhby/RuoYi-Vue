@@ -139,6 +139,7 @@
     getUserProfile
   } from "@/api/system/user";
   import {
+    logger,
     Logger
   } from "runjs/lib/common";
 
@@ -267,6 +268,8 @@
       },
       /** 提交按钮 */
       submitForm() {
+        this.form.numT = this.taskList.length;
+        this.form.userId = this.user.userId;
         this.$refs["form"].validate(valid => {
           if (valid) {
             this.form.taskList = this.taskList;
