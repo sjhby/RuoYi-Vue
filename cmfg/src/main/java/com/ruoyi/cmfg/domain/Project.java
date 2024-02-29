@@ -1,5 +1,6 @@
 package com.ruoyi.cmfg.domain;
 
+import java.util.List;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -11,7 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 项目管理对象 project
  * 
  * @author ruoyi
- * @date 2024-02-18
+ * @date 2024-02-27
  */
 public class Project extends BaseEntity
 {
@@ -33,9 +34,12 @@ public class Project extends BaseEntity
     @Excel(name = "需求方ID")
     private Long userId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 是否完成 */
+    @Excel(name = "是否完成")
     private Integer finish;
+
+    /** 任务管理信息 */
+    private List<Task> taskList;
 
     public void setProjId(Long projId) 
     {
@@ -83,6 +87,16 @@ public class Project extends BaseEntity
         return finish;
     }
 
+    public List<Task> getTaskList()
+    {
+        return taskList;
+    }
+
+    public void setTaskList(List<Task> taskList)
+    {
+        this.taskList = taskList;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -91,6 +105,7 @@ public class Project extends BaseEntity
             .append("numT", getNumT())
             .append("userId", getUserId())
             .append("finish", getFinish())
+            .append("taskList", getTaskList())
             .toString();
     }
 }
