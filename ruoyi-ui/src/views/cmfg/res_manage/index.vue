@@ -161,7 +161,10 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所需服务类型" prop="serType">
-          <el-input v-model="form.serType" placeholder="请输入所需服务类型" />
+            <el-select v-model="form.serType" placeholder="请选择服务类型">
+              <el-option v-for="dict in dict.type.service_type" :key="dict.value" :label="dict.label"
+                :value="dict.value" />
+            </el-select>
         </el-form-item>
         <el-form-item label="制造资源名称" prop="resName">
           <el-input v-model="form.resName" placeholder="请输入制造资源名称" />
@@ -178,9 +181,9 @@
         <el-form-item label="提供商ID" prop="userId" v-hasRole="['admin']">
           <el-input v-model="form.userId" placeholder="请输入提供商ID" />
         </el-form-item>
-        <el-form-item label="所属服务ID" prop="serId">
+        <!-- <el-form-item label="所属服务ID" prop="serId">
           <el-input v-model="form.serId" placeholder="请输入所属服务ID" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="注册时间" prop="dateTime">
           <el-date-picker v-model="form.dateTime" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
                           :style="{width: '100%'}" placeholder="请选择日期选择" clearable></el-date-picker>
@@ -203,9 +206,11 @@
 <script>
 import { listRes_manage, getRes_manage, delRes_manage, addRes_manage, updateRes_manage } from "@/api/cmfg/res_manage";
 import {getUserProfile} from "@/api/system/user";
+import { logger } from "runjs/lib/common";
 
 export default {
   name: "Res_manage",
+  dicts: ['service_type'],
   components: {},
   props: [],
 
@@ -246,8 +251,6 @@ export default {
       },
       // 表单参数
       form: {
-        selType: 1,
-        dateTime: null,
       },
       // 表单校验
       rules: {
@@ -300,6 +303,8 @@ export default {
       getUserProfile().then(response => {
         this.user = response.data;
         this.queryParams.userId=this.user.userId;
+        this.form.userId=this.user.userId;
+        logger.log(this.form.userId);
         this.getList();
       });
     },
@@ -367,6 +372,9 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.form.userId = this.user.userId;
+      var temp = Number.parseFloat(this.form.quality);
+      this.form.quality = temp;
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.resId != null) {
